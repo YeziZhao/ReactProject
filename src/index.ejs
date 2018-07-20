@@ -1,0 +1,25 @@
+<!-- javascript框架接管了所有DOM相关操作与更新后，HTML方面的工作就大量减少了，很多时候只需要为框架提供一个可以注入DOM元素的根节点即可 -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- 在 HTML 中添加应用标题 title，不希望采用硬编码的方式来处理应用标题，而是希望将应用标题作为 webpack 插件中的一个变量注入到 HTML 模板中，所以需要选择一个模板语言来增强普通 HTML 的功能。这里我们以 EJS 为例讲解如何实现变量注入 -->
+    <title><%= htmlWebpackPlugin.options.title %></title>
+    <!-- 为了让页面的缩放比例与当前用户设备的屏幕尺寸保持一致，我们可以在模板中添加 HTML5 新引入的 viewport 属性，这对于需要支持移动端的项目非常重要。webpack 配置中的 html-webpack-plugin 可以解析以 ejs 为模板的文件 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+    <!-- 将 webpack 编译完成后的 JavaScript 与 CSS 的文件路径也注入到 HTML 模板中 -->
+    <% for (var chunk in htmlWebpackPlugin.files.css) { %>
+      <link rel="preload" href="<%= htmlWebpackPlugin.files.css[chunk] %>" as="style">
+    <% } %>
+    <% for (var chunk in htmlWebpackPlugin.files.chunks) { %>
+      <link rel="preload" href="<%= htmlWebpackPlugin.files.chunks[chunk].entry %>" as="script">
+    <% } %>
+</head>
+<body>
+    <div id="app"></div>
+</body>
+</html>
