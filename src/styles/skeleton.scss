@@ -1,4 +1,5 @@
-@import 'helpers';
+@import 'variables.scss';
+@import 'mixins.scss';
 
 * {
 	box-sizing: border-box;
@@ -30,7 +31,7 @@ button {
 
 a {
 	text-decoration: none;
-	color: $ui-text;
+	// color: $ui-text;
 }
 
 ul {

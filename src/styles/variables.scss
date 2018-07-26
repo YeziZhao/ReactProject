@@ -1,4 +1,5 @@
 // 对于 CSS 中颜色的处理，需要考虑到不同颜色在整体项目中的复用性与统一性。编写具体的页面样式时坚持不使用任何硬编码的值来保证项目样式的统一性，为后续维护中的样式变更打下良好的基础。
+// color palettes
 $grey-1: #ffffff !default;
 $grey-2: #fafafa !default;
 $grey-3: #f5f5f5 !default;
@@ -32,34 +33,44 @@ $red-8: #a8071a !default;
 $red-9: #820014 !default;
 $red-10: #5c0011 !default;
 
-// General color scheme
-$ui-white: #fff !default;
-$ui-white-darken-2: #f5f5f5 !default;
-$ui-white-darken-3: #efefef !default;
-$ui-white-darken-4: #d8d8d8 !default;
-$ui-white-darken-5: #9b9b9b !default;
+$green-1: #f6ffed !default;
+$green-2: #d9f7be !default;
+$green-3: #b7eb8f !default;
+$green-4: #95de64 !default;
+$green-5: #73d13d !default;
+$green-6: #52c41a !default;
+$green-7: #389e0d !default;
+$green-8: #237804 !default;
+$green-9: #135200 !default;
+$green-10: #092b00 !default;
 
-$ui-black: #40485a !default;
-$ui-black-lighten: #5a6274 !default;
-$ui-black-darken: #272f41 !default;
+// font
+$font-size-base: 14px !default;
+$font-size-sm: 12px !default;
+$font-size-lg: 16px !default;
+$font-size-xl: 20px !default;
+$font-color-title: rgba(0, 0, 0, .85) !default;
+$font-color-primary: rgba(0, 0, 0, .65) !default;
+$font-color-secondary: rgba(0, 0, 0, .45) !default;
 
-$ui-green: #3ac88e !default;
-$ui-green-lighten: #54e2a8 !default;
-$ui-green-darken: #21af75 !default;
+// shadow
+$shadow-color: rgba(0, 0, 0, .15) !default;
+$shadow-color-light: rgba(0, 0, 0, .08) !default;
+$shadow-1-up: 0 1px 4px $shadow-color !default;
+$shadow-1-down: 0 1px 4px $shadow-color !default;
+$shadow-1-left: -1px 0 4px $shadow-color !default;
+$shadow-1-right: 1px 0 4px $shadow-color !default;
+$shadow-1-down-light: 0 1px 4px $shadow-color-light !default;
 
-$ui-red: #ff4e4e !default;
-$ui-red-lighten: #ff6868 !default;
-$ui-red-darken: #e63535 !default;
+// background
+$layout-body-background: #f0f2f5 !default;
+$layout-sider-header-background: #002140 !default;
+$layout-sider-body-background: #001529 !default;
 
-$ui-blue: #286fdc !default;
-$ui-blue-lighten: #4289f6 !default;
-$ui-blue-darken: #0f56c3 !default;
+// border
+$border-radius-base: 4px !default;
 
-// Aliases
-$ui-text: $ui-black !default;
-$ui-text-lighten: $ui-white-darken-5 !default;
-$ui-disabled: $ui-white-darken-4 !default;
-$ui-success: $ui-green !default;
-$ui-info: $ui-blue !default;
-$ui-primary: $ui-red !default;
-$ui-background: $ui-white-darken-2 !default;
+// z-index
+$z-index-1: 9;
+$z-index-2: 99;
+$z-index-3: 999;

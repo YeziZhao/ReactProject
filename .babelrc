@@ -8,13 +8,14 @@
 		"syntax-dynamic-import",
 		"transform-class-properties",
 		"transform-object-rest-spread",
-		[
-			"module-resolver",
-			{
-				"root": [
-					"./src"
-				]
-			}
-		]
+		"transform-runtime",
+		["module-resolver", {
+			"root": ["./src"]
+		}],
+		["import", { // 实现按需加载，我的项目启动比较慢，后来发现是因为这个库太大的缘故
+			"libraryName": "antd",
+			"libraryDirectory": "es",
+			"style": true 
+		}]
 	]
 }

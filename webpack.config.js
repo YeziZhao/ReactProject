@@ -7,6 +7,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 // 为css添加前缀
 const autoprefixer = require('autoprefixer');
+const webpack = require('webpack');
 const path = require('path');
 const pkg = require('./package.json');
 
@@ -18,6 +19,11 @@ const SOURCE_DIR = path.resolve(__dirname, 'src');
 const OUTPUT_DIR = path.resolve(__dirname, 'build');
 const CLIENT_DIR = path.join(OUTPUT_DIR, VERSION);
 
+// 多国语注入文件
+const buildConfig = require('./buildConfig.js');
+const BUILD_DOMAIN = process.env.BUILD_DOMAIN || 'localhost';
+const config = buildConfig[BUILD_DOMAIN];
+const localeMessages = require(`./src/i18n`);
 module.exports = {
     mode: ENV,
     target: 'web',
@@ -40,6 +46,9 @@ module.exports = {
             },
           },
         },
+    },
+    resolve: {
+      extensions: ['.js', '.jsx', '.json'],
     },
     // module: {
     //     rules: [{
@@ -129,86 +138,111 @@ module.exports = {
     //     ]
     // },
     module: {
-        rules: [{
-          test: /\.(jsx|js)$/,
-          exclude: /node_modules/,
-          use: {
-            loader: 'babel-loader',
+      rules: [{
+        test: /\.(jsx|js)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+        },
+      }, {
+        test: /\.scss$/,
+        exclude: /node_modules/,
+        use: IS_PROD ? [
+          MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: { minimize: true },
           },
-        }, {
-          test: /\.scss$/,
-          exclude: /node_modules/,
-          use: IS_PROD ? [
-            MiniCssExtractPlugin.loader,
-            {
-              loader: 'css-loader',
-              options: { minimize: true },
-            },
-            {
-              loader: 'postcss-loader',
-              options: {
-                plugins: () => [autoprefixer({ browsers: 'last 5 versions' })],
-                sourceMap: true,
-              },
-            },
-            {
-              loader: 'sass-loader',
-              options: {
-                includePaths: [
-                  SOURCE_DIR,
-                ],
-              },
-            },
-          ] : [
-              {
-                loader: 'style-loader',
-                options: { singleton: true },
-              },
-              'css-loader',
-              {
-                loader: 'postcss-loader',
-                options: {
-                  plugins: () => [autoprefixer({ browsers: 'last 5 versions' })],
-                  sourceMap: true,
-                },
-              },
-              {
-                loader: 'sass-loader',
-                options: {
-                  includePaths: [
-                    SOURCE_DIR,
-                  ],
-                },
-              },
-            ],
-        }, {
-          test: /\.css$/,
-          include: /node_modules/,
-          use: [
-            MiniCssExtractPlugin.loader,
-            'css-loader',
-            {
-              loader: 'postcss-loader',
-              options: {
-                plugins: () => [autoprefixer({ browsers: 'last 5 versions' })],
-                sourceMap: true,
-              },
-            },
-          ],
-        }, {
-          test: /\.(svg|woff2?|ttf|eot|jpe?g|png|gif)(\?.*)?$/i,
-          use: IS_PROD ? {
-            loader: 'file-loader',
+          {
+            loader: 'postcss-loader',
             options: {
-              name: '[name].[hash:8].[ext]',
-              outputPath: 'assets/images/',
+              plugins: () => [autoprefixer({ browsers: 'last 5 versions' })],
+              sourceMap: true,
             },
-          } : {
-              loader: 'url-loader',
+          },
+          {
+            loader: 'sass-loader',
+            options: {
+              includePaths: [
+                SOURCE_DIR,
+              ],
             },
-        }],
-      },
+          },
+        ] : [
+          {
+            loader: 'style-loader',
+            options: { singleton: true },
+          },
+          'css-loader',
+          {
+            loader: 'postcss-loader',
+            options: {
+              plugins: () => [autoprefixer({ browsers: 'last 5 versions' })],
+              sourceMap: true,
+            },
+          },
+          {
+            loader: 'sass-loader',
+            options: {
+              includePaths: [
+                SOURCE_DIR,
+              ],
+            },
+          },
+        ],
+      }, {
+        test: /\.less$/,
+        include: /node_modules/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          {
+            loader: 'postcss-loader',
+            options: {
+              plugins: () => [autoprefixer({ browsers: 'last 5 versions' })],
+              sourceMap: true,
+            },
+          },
+          {
+            loader: 'less-loader',
+            options: {
+              javascriptEnabled: true,
+            },
+          },
+        ],
+      }, {
+        test: /\.css$/,
+        include: /node_modules/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          {
+            loader: 'postcss-loader',
+            options: {
+              plugins: () => [autoprefixer({ browsers: 'last 5 versions' })],
+              sourceMap: true,
+            },
+          },
+        ],
+      }, {
+        test: /\.(svg|woff2?|ttf|eot|jpe?g|png|gif)(\?.*)?$/i,
+        use: IS_PROD ? {
+          loader: 'file-loader',
+          options: {
+            name: '[name].[hash:8].[ext]',
+            outputPath: 'assets/images/',
+          },
+        } : {
+          loader: 'url-loader',
+        },
+      }],
+    },
     plugins: [
+        new webpack.DefinePlugin({
+          'process.env.NODE_ENV': JSON.stringify(ENV),
+          'process.env.BUILD_CONFIG': JSON.stringify(config),
+          'process.env.BUILD_LOCALE_MESSAGES': JSON.stringify(localeMessages),
+        }),
         new MiniCssExtractPlugin({
             filename: 'assets/css/style.[hash:8].css',
             chunkFilename: 'assets/css/[id].[hash:8].css',

@@ -1,35 +1,34 @@
-function createAsyncAction(name, callback, meta = {}) {
-    if (typeof callback !== 'function') {
-        throw new Error('[createAsyncAction] callback should be a function');
-    }
-    return (dispatch) => {
+import * as api from 'request';
+
+function createAsyncAction(name, url, data, reqType, meta = {}) {
+    
+    return async (dispatch) => {
         // 开始发起异步信息请求
-        dispatch({
-            meta,
-            type: `${name}_REQUEST`,
-        });
+        // dispatch({
+        //     meta,
+        //     type: `${name}_REQUEST`,
+        // });
         try {
-            return callback()
-                .then((value) => {
-                    const action = {
-                        meta,
-                        type: `${name}_SUCCESS`,
-                        payload: value,
-                    };
-                    dispatch(action);
-                    return action;
-                })
-                .catch((err) => {
-                    const action = {
-                        meta,
-                        type: `${name}_ERROR`,
-                        payload: err,
-                        error: true,
-                    };
-            
-                    dispatch(action);
-                    return action;
-                });
+            let result = await api[reqType](url, data);
+            debugger;
+            if (result && result.code === 200) {
+                const action = {
+                    meta,
+                    type: `${name}_SUCCESS`,
+                    payload: result.data
+                };
+                dispatch(action);
+                return action;
+            } else {
+                const action = {
+                    meta,
+                    type: `${name}_ERROR`,
+                    payload: result.err,
+                    error: true,
+                };
+                dispatch(action);
+                return action;
+            }
         } catch(err) {
             const action = {
                 meta,
@@ -37,9 +36,8 @@ function createAsyncAction(name, callback, meta = {}) {
                 payload: err,
                 error: true,
             };
-        
             dispatch(action);
-            return Promise.resolve(action);
+            return action;
         }
     }
 }
