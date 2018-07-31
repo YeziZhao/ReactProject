@@ -1,47 +1,35 @@
-import React , { Component } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import classnames from 'classnames';
-import { withRouter } from 'react-router-dom';
 import { injectIntl } from 'react-intl-context';
-import { connect } from 'react-redux';
-import isEmpty from 'lodash/isEmpty';
-import logo from 'assets/logo.svg';
-import { bindActionCreators } from 'redux';
-import actions from './actions';
+import { Link } from 'react-router-dom';
+import { Button } from 'antd';
 import './index.scss';
-import { 
-    Input, 
-    Icon, 
-    Button 
-} from 'antd';
 
 const propTypes = {
-    history: PropTypes.object.isRequired,
-    intl: PropTypes.object.isRequired,
-    prefixCls: PropTypes.string
-};
-
-const defaultProps = {
-    prefixCls: 'view-Unauthorized',
+  intl: PropTypes.object.isRequired,
 };
 
 class Unauthorized extends Component {
+  render() {
+    const { intl } = this.props;
 
-    render() {
-        return (<div>Unauthorized</div>)
-    }
+    return (
+      <div className="view-unauthorized">
+        <div className="view-unauthorized-errorCode">
+          403
+        </div>
+        <div className="view-unauthorized-errorDesc">
+          {intl.formatMessage({ id: 'unauthorized_403' })}
+        </div>
+        <Link to="/" href="/">
+          <Button type="primary">
+            {intl.formatMessage({ id: 'exception_backToHome' })}
+          </Button>
+        </Link>
+      </div>
+    );
+  }
 }
 
-const mapStateToProps = state => {
-    return {
-
-    };
-};
-  
-const mapDispatchToProps = (dispatch) => {
-    return {
-        actions: bindActionCreators(actions, dispatch)
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(injectIntl(Unauthorized)));
+Unauthorized.propTypes = propTypes;
+export default injectIntl(Unauthorized);

@@ -38,10 +38,10 @@ const menuData = [
                 name: 'siderMenu_403',
                 path: '403',
             },
-            {
-                name: 'siderMenu_404',
-                path: '404'
-            }
+            // {
+            //     name: 'siderMenu_404',
+            //     path: '404'
+            // }
         ]
     }
 ];

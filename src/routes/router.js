@@ -8,8 +8,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import authorizedRoutes from './authorizedRoutes';
 import normalRoutes from './normalRoutes';
-import BasicLayout from 'layout/BasicLayout';
-import NormalLayout from 'layout/NormalLayout';
+import BasicLayout from 'views/layout/BasicLayout';
+import NormalLayout from 'views/layout/NormalLayout';
 import NotFound from 'views/notFound';
 
 // 获取多国语数据
@@ -43,9 +43,11 @@ let Router = ({
     </ConnectedRouter>
 );
 
-const mapStateToProps = state => ({
-    user: state.app.user
-});
+const mapStateToProps = state => {
+    return {
+        user: state.app.user
+    }
+};
 
 Router.propTypes = propTypes;
 export default connect(mapStateToProps)(Router);

@@ -1,47 +1,67 @@
-import React , { Component } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import classnames from 'classnames';
-import { withRouter } from 'react-router-dom';
-import { injectIntl } from 'react-intl-context';
 import { connect } from 'react-redux';
-import isEmpty from 'lodash/isEmpty';
-import logo from 'assets/logo.svg';
-import { bindActionCreators } from 'redux';
+import { Link } from 'react-router-dom';
+import { Card } from 'antd';
+import map from 'lodash/map';
 import actions from './actions';
 import './index.scss';
-import { 
-    Input, 
-    Icon, 
-    Button 
-} from 'antd';
+
+const { Meta } = Card;
 
 const propTypes = {
-    history: PropTypes.object.isRequired,
-    intl: PropTypes.object.isRequired,
-    prefixCls: PropTypes.string
-};
-
-const defaultProps = {
-    prefixCls: 'view-Outlets',
+  outlets: PropTypes.array.isRequired,
+  getOutlets: PropTypes.func.isRequired,
 };
 
 class Outlets extends Component {
+  componentDidMount() {
+    const { getOutlets } = this.props;
+    getOutlets();
+  }
 
-    render() {
-        return (<div>Outlets</div>)
-    }
+  renderOutlets = () => {
+    const { outlets } = this.props;
+    return (
+      <div className="view-outlets-outlets">
+        {map(outlets, (outlet) => {
+          const link = `/outlets/${outlet.id}`;
+          return (
+            <Link
+              href={link}
+              to={link}
+              key={outlet.id}
+              className="view-outlets-outlets-item"
+            >
+              <Card cover={<img alt="" src={outlet.imgSrc} />}>
+                <Meta
+                  title={outlet.name}
+                  description={outlet.description}
+                />
+              </Card>
+            </Link>
+          );
+        })}
+      </div>
+    );
+  }
+
+  render() {
+    return (
+      <div className="view-outlets">
+        {this.renderOutlets()}
+      </div>
+    );
+  }
 }
 
-const mapStateToProps = state => {
-    return {
+const mapStateToProps = state => ({
+  outlets: state.outlets.outlets,
+});
 
-    };
-};
-  
-const mapDispatchToProps = (dispatch) => {
-    return {
-        actions: bindActionCreators(actions, dispatch)
-    };
-};
+const mapDispatchToProps = ({
+  getOutlets: actions.getOutlets,
+});
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(injectIntl(Outlets)));
+Outlets.propTypes = propTypes;
+export default connect(mapStateToProps, mapDispatchToProps)(Outlets);

@@ -1,47 +1,48 @@
-import React , { Component } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import classnames from 'classnames';
-import { withRouter } from 'react-router-dom';
-import { injectIntl } from 'react-intl-context';
-import { connect } from 'react-redux';
-import isEmpty from 'lodash/isEmpty';
-import logo from 'assets/logo.svg';
-import { bindActionCreators } from 'redux';
-import actions from './actions';
+import { Card } from 'antd';
 import './index.scss';
-import { 
-    Input, 
-    Icon, 
-    Button 
-} from 'antd';
 
 const propTypes = {
-    history: PropTypes.object.isRequired,
-    intl: PropTypes.object.isRequired,
-    prefixCls: PropTypes.string
+  prefixCls: PropTypes.string,
 };
 
 const defaultProps = {
-    prefixCls: 'view-WorkInProgress',
+  prefixCls: 'view-workInProgress',
 };
 
 class WorkInProgress extends Component {
+  render() {
+    const { prefixCls } = this.props;
 
-    render() {
-        return (<div>WorkInProgress</div>)
-    }
+    return (
+      <div className={prefixCls}>
+        <div className={`${prefixCls}-colLayout`}>
+          <Card className={`${prefixCls}-colLayout-item`}>
+            Work In Progress
+          </Card>
+          <Card className={`${prefixCls}-colLayout-item`}>
+            Work In Progress
+          </Card>
+        </div>
+        <div className={`${prefixCls}-colLayout`}>
+          <Card className={`${prefixCls}-colLayout-item`}>
+            Work In Progress
+          </Card>
+          <Card className={`${prefixCls}-colLayout-item`}>
+            Work In Progress
+          </Card>
+        </div>
+        <div className={`${prefixCls}-rowLayout`}>
+          <Card className={`${prefixCls}-rowLayout-item`}>
+            Work In Progress
+          </Card>
+        </div>
+      </div>
+    );
+  }
 }
 
-const mapStateToProps = state => {
-    return {
-
-    };
-};
-  
-const mapDispatchToProps = (dispatch) => {
-    return {
-        actions: bindActionCreators(actions, dispatch)
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(injectIntl(WorkInProgress)));
+WorkInProgress.propTypes = propTypes;
+WorkInProgress.defaultProps = defaultProps;
+export default WorkInProgress;

@@ -9,7 +9,7 @@ module.exports = {
     },
     localhost: {
         locale: 'en_us',
-        apiDomain: 'http://localhost:3001',
+        apiDomain: 'http://localhost:3000',
     },
 };
   

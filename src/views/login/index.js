@@ -30,8 +30,8 @@ const defaultProps = {
 
 class Login extends Component {
     state = {
-        username: '',
-        password: '',
+        username: 'admin',
+        password: '123',
     };
 
     componentDidMount() {
@@ -39,6 +39,7 @@ class Login extends Component {
             isLogin,
             history
         } = this.props;
+        console.log('0-----------', isLogin)
         if (isLogin) {
             history.push('/');
         }
@@ -66,7 +67,10 @@ class Login extends Component {
             username,
             password
         } = this.state;
-        actions.loginUser(username, password);
+        actions.login(username, password)
+            .then(callbackAction => {
+                actions.loginUser(callbackAction);
+            });
     }
 
     updateLocale = (locale) => {
@@ -146,9 +150,9 @@ class Login extends Component {
                     <span
                     className={classnames({
                         [`${prefixCls}-intlItem`]: true,
-                        [`${prefixCls}-intlItem-active`]: intl.locale === 'en-us',
+                        [`${prefixCls}-intlItem-active`]: intl.locale === 'en_us',
                     })}
-                    onClick={() => this.updateLocale('en-us')}
+                    onClick={() => this.updateLocale('en_us')}
                     role="presentation"
                     >
                     English
@@ -159,9 +163,9 @@ class Login extends Component {
                     <span
                     className={classnames({
                         [`${prefixCls}-intlItem`]: true,
-                        [`${prefixCls}-intlItem-active`]: intl.locale === 'zh-cn',
+                        [`${prefixCls}-intlItem-active`]: intl.locale === 'zh_cn',
                     })}
-                    onClick={() => this.updateLocale('zh-cn')}
+                    onClick={() => this.updateLocale('zh_cn')}
                     role="presentation"
                     >
                     中文

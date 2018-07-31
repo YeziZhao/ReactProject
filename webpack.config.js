@@ -257,11 +257,21 @@ module.exports = {
         }),
     ],
     devtool: IS_PROD ? 'source-map' : 'eval-source-map',
-    devServer: {
-        port: process.env.PORT || 8082,
-        host: 'localhost',
-        publicPath: '/',
-        contentBase: SOURCE_DIR,
-        historyApiFallback: true,
-    },
+    // devServer: {
+    //     port: process.env.PORT || 8082,
+    //     host: 'localhost',
+    //     publicPath: '/',
+    //     contentBase: SOURCE_DIR,
+    //     historyApiFallback: true,
+    //     proxy: {
+    //       '/api/*': {
+    //       target: 'http://localhost:3001',
+    //       changeOrigin: true,
+    //       secure: false
+    //       }
+    //     },
+    //     setup: function(app) {
+    //       app.get('/assets', express.static('/build/'));
+    //     }
+    // },
 };

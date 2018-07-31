@@ -50,13 +50,14 @@ const defaultProps = {
 };
 
 class AclRouter extends Component {
-    renderRedirectRoute = (route) => (
-        <Route
-            key={route.path}
-            {...omitRouteRenderProperties(route)}
-            render={() => <Redirect to={route.redirect}/>}
+    renderRedirectRoute = route => {
+        console.log(...omitRouteRenderProperties(route))
+        return <Route
+          key={route.path}
+          {...omitRouteRenderProperties(route)}
+          render={() => <Redirect to={route.redirect} />}
         />
-    );
+      };
 
     // props pass to Layout & Component are history, location, match
     renderAuthorizedRoute = (route) => {
@@ -71,9 +72,9 @@ class AclRouter extends Component {
             component: RouteComponent,
             unauthorized: Unauthorized,
         } = route;
-
+        // debugger;
         const hasPermission = checkPermissions(authorities, permissions);
-
+        
         if (!hasPermission && route.unauthorized) {
             return (
                 <Route
@@ -90,7 +91,7 @@ class AclRouter extends Component {
 
         if (!hasPermission && route.redirect) {
             return this.renderRedirectRoute(route);
-        }
+          }
 
         // react-router 默认会将 match、location、history 等路由信息传递给 Route 的下一级组件。不会传递给child组件，因此需要手动将路由信息等传递给child页面组件。
         // 这里通过统一修改render实现，去掉route 对象上的 render, component属性，自定义render方法
@@ -149,8 +150,9 @@ class AclRouter extends Component {
     render() {
         const {
             normalRoutes,
-            authorizedRoutes
+            authorizedRoutes,
         } = this.props;
+       
         // Switch 内部的Route : 多个符合条件，匹配一个。因此先按照 没权限 => 有权限 => notFound 进行配置
         // 没有Switch, 只要符合条件的都会匹配出现渲染
         return (

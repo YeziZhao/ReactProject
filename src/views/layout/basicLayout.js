@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames'; // 计算class 的样式。https://www.npmjs.com/package/classnames
 import { connect } from 'react-redux'; // 将redux数据注入到react组件中的桥梁
+import { bindActionCreators } from 'redux';
 import { injectIntl } from 'react-intl-context'; // 解决多国语问题，在外部将多国语文件传入组件内部。https://www.npmjs.com/package/react-intl-context
 import { Link } from 'react-router-dom';
 import { matchRoutes } from 'react-router-config'; // 静态路由配置，用于路由分割
@@ -9,7 +10,6 @@ import Sider from 'react-sider';
 import 'react-sider/lib/index.css';
 import menuData from './menuData';
 import { combineRoutes } from 'routes';
-import actions from 'actions';
 import getFirstChar from 'utils/getFirstChar';
 import generateBreadcrumb from 'utils/generateBreadcrumb';
 import LoginChecker from 'hoc/LoginChecker';
@@ -20,6 +20,7 @@ import get from 'lodash/get';
 import map from 'lodash/map';
 import head from 'lodash/head';
 import isEmpty from 'lodash/isEmpty';
+import layoutActions from './actions';
 import {
     Avatar,
     Dropdown,
@@ -49,11 +50,10 @@ const defaultProps = {
 class BasicLayout extends Component {
     constructor(props) {
         super(props);
-        this.menuData = this.formatMenuData(menuData);
     }
 
     formatMenuData = (menus) => {
-        map(menus, (menu) => {
+        return map(menus, (menu) => {
             const result = {
                 ...menu,
                 name: this.props.intl.formatMessage({id: menu.name}) // 注意這裡的intl 是怎麼來的？待解決
@@ -61,21 +61,29 @@ class BasicLayout extends Component {
             if (menu.children) {
                 result.children = this.formatMenuData(menu.children);
             }
-            return result; // 我認為這裡不需要返回
+            return result;
         })
     };
 
     // 头部
     renderHeader = () => {
         const {
-            logout,
             prefixCls,
             user,
             notices,
-            deleteNotice,
+            actions,
             intl
         } = this.props;
 
+        const deleteNotice = (id) => {
+            actions.deleteNotice(id).then(callbackAction => {
+                if (callbackAction.type === 'APP_DELETE_NOTICE_SUCCESS') {
+                    actions.getNotices();
+                }
+                return null;
+            })
+        };
+        
         const noticeMenu = isEmpty(notices) ?   
             (
                 <div className={`${prefixCls}-noticeEmpty`}>
@@ -108,7 +116,7 @@ class BasicLayout extends Component {
                 <Menu.Divider/>
                 <Menu.Item className={`${prefixCls}-userMenuItem`}>
                     <div
-                        onClick={logout}
+                        onClick={actions.logout}
                         role="presentation"
                     >
                         <Icon type="logout" className={`${prefixCls}-userMenuIcon`}/>
@@ -193,11 +201,11 @@ class BasicLayout extends Component {
     };
 
     // footer
-    renderFooter = () => {
+    renderFooter = () => (
         <div className={`${this.props.prefixCls}-footer`}>
             Copyright zhaoyezi © 2018
         </div>
-    };
+    );
 
     // 通知列表
     renderNotification = () => {
@@ -236,7 +244,7 @@ class BasicLayout extends Component {
                         <Sider
                             appName={intl.formatMessage({id: 'appName'})}
                             appLogo={logo}
-                            menuData={this.menuData}
+                            menuData={this.formatMenuData(menuData)}
                             pathname={location.pathname}
                         />
                         <div className={`${prefixCls}-content`}>
@@ -274,10 +282,9 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => {
-    return {};
-    // logout: appAction.logout,
-    // deleteNotice: appAction.deleteNotice,
-    // resetNotification: appAction.resetNotification,
+    return {
+        actions: bindActionCreators(layoutActions, dispatch)
+    };
 }
 
 BasicLayout.propTypes = propTypes;

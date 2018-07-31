@@ -9,6 +9,7 @@ import createBrowserHistory from 'history/createBrowserHistory';
 import configureStore from 'store/configureStore';
 import Router from 'routes/Router';
 import 'antd/dist/antd.css';
+import initClient from 'utils/initClient';
 
 let {
     store,
@@ -20,5 +21,8 @@ let app = (store, history) => (
         <Router history={history}/>
     </Provider>
 );
+
+// 初始化页面（判断当前登录与否）
+initClient(store.dispatch);
 
 ReactDOM.render(app(store, history), window.document.getElementById('app'));

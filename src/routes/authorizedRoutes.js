@@ -13,7 +13,7 @@ const authorizedRoutes = [
         pageTitle: ''
     },
     {
-        path: '/dashbord/analysis/offline',
+        path: '/dashboard/analysis/offline',
         exact: true,
         permissions: ['admin', 'user'],
         redirect: '/login',
@@ -21,7 +21,7 @@ const authorizedRoutes = [
         pageTitle: '',
     }, 
     {
-        path: '/dashboard/worksplace',
+        path: '/dashboard/workplace',
         exact: true,
         permissions: ['admin'],
         redirect: '/login',
